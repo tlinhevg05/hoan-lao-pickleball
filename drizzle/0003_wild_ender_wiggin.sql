@@ -1,0 +1,1 @@
+ALTER TABLE `event_state` ADD `official_at` text;

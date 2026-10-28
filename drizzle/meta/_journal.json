@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792840643469,
+      "tag": "0000_tearful_james_howlett",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792850455162,
+      "tag": "0001_dry_luminals",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792863468766,
+      "tag": "0002_amused_vision",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1792872044389,
+      "tag": "0003_wild_ender_wiggin",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1792875712820,
+      "tag": "0004_flimsy_wolfsbane",
+      "breakpoints": true
+    }
+  ]
+}

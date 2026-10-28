@@ -51,8 +51,6 @@ work-seed.sql
 !.dev.vars.example
 
 # VPS persistence and secrets
-/compose.override.yaml
-/compose.override.yml
 /data/
 /backups/
 *.sqlite

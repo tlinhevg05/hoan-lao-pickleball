@@ -79,18 +79,14 @@ Khi khôi phục: dừng app, giữ bản sao hiện trạng, giải nén archiv
 
 ## 5. Nếu VPS dùng Nginx thay vì Traefik
 
-Tạo file riêng `compose.override.yaml` bên cạnh `compose.yaml` để tắt routing Traefik và mở cổng loopback. File này được Git bỏ qua, nên cấu hình riêng của VPS không làm thay đổi file Compose dùng chung khi cập nhật code:
+Bỏ phần `labels` trong `compose.yaml` và thêm vào service `app`:
 
 ```yaml
-services:
-  app:
-    labels:
-      traefik.enable: "false"
     ports:
       - "127.0.0.1:3000:3000"
 ```
 
-Lệnh `docker compose up -d --build` tự đọc cả file gốc và file override. Nếu VPS đang dùng Traefik thì không cần file override này. Reverse proxy HTTPS hiện tại chuyển vào cổng đó; tham khảo `deploy/nginx.conf.example`. Cần giữ Host/X-Forwarded-Proto và ghi đè X-Real-IP. Tên miền thực phải khớp `DOMAIN` và `APP_ORIGIN`; nếu không, API ghi dữ liệu sẽ từ chối vì khác origin. Không mở trực tiếp cổng 3000 ra Internet khi dùng chế độ tin cậy proxy.
+Reverse proxy HTTPS hiện tại chuyển vào cổng đó; tham khảo `deploy/nginx.conf.example`. Cần giữ Host/X-Forwarded-Proto và ghi đè X-Real-IP. Tên miền thực phải khớp `DOMAIN` và `APP_ORIGIN`; nếu không, API ghi dữ liệu sẽ từ chối vì khác origin. Không mở trực tiếp cổng 3000 ra Internet khi dùng chế độ tin cậy proxy.
 
 ## 6. Chạy Node trực tiếp
 

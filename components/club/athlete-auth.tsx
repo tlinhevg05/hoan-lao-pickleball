@@ -1,5 +1,5 @@
 "use client";
-import { ratingPattern, ratingHint } from "@/lib/rating";
+import { ratingPattern, ratingHint, validRating } from "@/lib/rating";
 import { useState, type FormEvent } from "react";
 import { ArrowRight, UserPlus, LogIn, Check, ChevronLeft } from "lucide-react";
 import type { AuthData, Tournament } from "@/lib/types";
@@ -71,7 +71,7 @@ export function ProfileFields({
           <input
             name="rating"
             required
-            inputMode="decimal"
+            inputMode="text"
             pattern={ratingPattern}
             title={ratingHint}
             type="text"
@@ -136,7 +136,7 @@ export function ProfileFields({
     </>
   );
 }
-function formObject(form: HTMLFormElement) {
+function formObject(form: HTMLFormElement): Record<string, FormDataEntryValue | boolean> {
   const f = new FormData(form);
   return { ...Object.fromEntries(f), consent: f.has("consent") };
 }
@@ -176,6 +176,10 @@ export function AccountAccess({
     e.preventDefault();
     setError("");
     const b = formObject(e.currentTarget) as Record<string, any>;
+    if (mode === "new" && !validRating(b.rating)) {
+      setError(ratingHint);
+      return;
+    }
     if (mode === "new" && b.password !== b.confirmPassword) {
       setError("Mật khẩu nhập lại chưa khớp.");
       return;
@@ -282,6 +286,10 @@ export function EventRegistration({
   function prepare(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const d = formObject(e.currentTarget) as Record<string, any>;
+    if (!validRating(d.rating)) {
+      setError(ratingHint);
+      return;
+    }
     if (d.password !== d.confirmPassword) {
       setError("Mật khẩu nhập lại chưa khớp.");
       return;
@@ -295,8 +303,10 @@ export function EventRegistration({
     setBusy(true);
     setError("");
     try {
+      const data = formObject(e.currentTarget);
+      if (!validRating(data.rating)) throw new Error(ratingHint);
       const result = await api("/api/registrations", {
-        ...formObject(e.currentTarget),
+        ...data,
         tournamentId: t.id,
         newAthlete,
       });
@@ -438,7 +448,7 @@ export function EventRegistration({
                 <input
                   name="rating"
                   required
-                  inputMode="decimal"
+                  inputMode="text"
                   pattern={ratingPattern}
                   title={ratingHint}
                   type="text"

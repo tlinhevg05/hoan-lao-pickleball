@@ -263,7 +263,7 @@ export default function Site({
             </span>
           </a>
         </header>
-        <main id="main">
+        <main id="main" className={view === "home" ? "home-page" : undefined}>
           {view === "home" && (
             <>
               <section className="club-banner" aria-label="Hoàn Lão Pickleball">
@@ -1161,15 +1161,15 @@ function EventSummary({ t, hero = false }: { t: Tournament; hero?: boolean }) {
         </span>
       </div>
       <div>
-        <CalendarDays size={22} />
-        <span>
-          Ngày diễn ra<strong>{dateLabel(t.date)}</strong>
-        </span>
-      </div>
-      <div>
         <Clock3 size={22} />
         <span>
           Hạn đăng ký<strong>{deadlineLabel(t.deadline)}</strong>
+        </span>
+      </div>
+      <div>
+        <CalendarDays size={22} />
+        <span>
+          Ngày diễn ra<strong>{dateLabel(t.date)}</strong>
         </span>
       </div>
       <div className="fee-fact">

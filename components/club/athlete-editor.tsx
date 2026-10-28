@@ -1,5 +1,5 @@
 "use client";
-import { ratingPattern, ratingHint } from "@/lib/rating";
+import { ratingPattern, ratingHint, validRating } from "@/lib/rating";
 import { useState, useId, type FormEvent } from "react";
 import { Check } from "lucide-react";
 import type { Athlete, Registration } from "@/lib/types";
@@ -21,10 +21,12 @@ export function AthleteEditor({
     setBusy(true);
     setError("");
     try {
+      const data = Object.fromEntries(new FormData(e.currentTarget));
+      if (!validRating(data.rating)) throw new Error(ratingHint);
       await api("/api/admin", {
         action: "profile",
         id: p.id,
-        data: Object.fromEntries(new FormData(e.currentTarget)),
+        data,
       });
       onSaved();
     } catch (e) {
@@ -102,7 +104,7 @@ export function AthleteEditor({
             <input
               name="rating"
               required
-              inputMode="decimal"
+              inputMode="text"
               pattern={ratingPattern}
               title={ratingHint}
               type="text"

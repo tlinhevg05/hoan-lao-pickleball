@@ -395,6 +395,23 @@ small {
   margin-top: 15px;
   margin-bottom: 0;
 }
+.home-page .section-head {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+.home-page .section-head h2 {
+  font-size: clamp(28px, 2.8vw, 34px);
+}
+.home-page .section-head > .text-link {
+  font-size: 14px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  max-width: none;
+}
+.home-page .empty-state p {
+  font-size: 16px;
+}
 .front-page {
   padding: 30px 32px 15px;
 }
@@ -524,7 +541,7 @@ small {
 }
 .event-info h1,
 .event-info h2 {
-  font-size: 34px;
+  font-size: 30px;
   margin: 18px 0 24px;
   overflow-wrap: anywhere;
 }
@@ -545,12 +562,12 @@ small {
   flex-shrink: 0;
 }
 .important-facts span {
-  font-size: 15px;
+  font-size: 14px;
   color: var(--muted);
 }
 .important-facts strong {
   display: block;
-  font-size: 23px;
+  font-size: 20px;
   line-height: 1.4;
   font-weight: 750;
   color: var(--ink);
@@ -561,7 +578,7 @@ small {
   padding: 15px 0;
 }
 .fee-fact strong {
-  font-size: 24px;
+  font-size: 21px;
 }
 .event-location {
   display: flex;
@@ -2025,7 +2042,7 @@ fieldset > p {
   }
   .event-info h1,
   .event-info h2 {
-    font-size: 41px;
+    font-size: 36px;
   }
   .event-card .poster-image {
     min-height: 400px;
@@ -2090,10 +2107,10 @@ fieldset > p {
   }
   .event-info h1,
   .event-info h2 {
-    font-size: 32px;
+    font-size: 29px;
   }
   .important-facts strong {
-    font-size: 22px;
+    font-size: 20px;
   }
   .event-actions .btn {
     width: 100%;
@@ -2592,7 +2609,7 @@ fieldset > p {
   }
   .event-info h1,
   .event-info h2 {
-    font-size: 35px;
+    font-size: 30px;
     margin: 17px 0 25px;
   }
   .important-facts {
@@ -2608,13 +2625,13 @@ fieldset > p {
     margin-top: 4px;
   }
   .important-facts span {
-    font-size: 14px;
+    font-size: 13px;
   }
   .important-facts strong {
-    font-size: 20px;
+    font-size: 18px;
   }
   .fee-fact strong {
-    font-size: 24px;
+    font-size: 20px;
   }
   .event-location {
     font-size: 16px;
@@ -3393,7 +3410,7 @@ fieldset > p {
   border-color: #a7b9ad;
 }
 .front-actions .badge {
-  font-size: 16px;
+  font-size: 14px;
 }
 .contact-socials {
   display: flex;
@@ -4025,11 +4042,12 @@ fieldset > p {
 .poster-view .poster-image, .front-hero .poster-image, .event-card .poster-image { display:block; position:relative; width:100%; height:100%; min-height:0; aspect-ratio:4/3; }
 .poster-view .poster-image img, .front-hero .poster-image img, .event-card .poster-image img { display:block; position:absolute; inset:0; width:100%; height:100%; max-height:none; object-fit:cover; }
 .front-hero .front-actions { position:absolute; inset:auto 0 0; display:flex; flex-direction:column; align-items:flex-start; gap:20px; padding:110px 38px 30px; background:linear-gradient(180deg,transparent 0%,rgba(11,35,39,.92) 28%,#0b2327 100%); color:white; }
-.front-actions h1 { max-width:none; margin:12px 0 0; font-size:clamp(34px,3.5vw,54px); line-height:1.05; }
+.front-actions h1 { max-width:none; margin:12px 0 0; font-size:clamp(28px,3vw,46px); line-height:1.1; }
 .front-actions .hero-summary { width:100%; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px 22px; }
 .hero-summary > div { min-width:0; }
-.hero-summary span { font-size:16px; color:#d8e4da; }
-.hero-summary strong { font-size:20px; line-height:1.5; color:white; overflow-wrap:anywhere; }
+.hero-summary span { font-size:14px; color:#d8e4da; }
+.hero-summary strong { font-size:18px; line-height:1.5; color:white; overflow-wrap:anywhere; }
+.hero-categories strong { font-size:17px; }
 .front-actions .hero-categories { grid-column:auto; }
 .front-actions .button-row { display:flex; flex-direction:row; flex-wrap:wrap; width:auto; gap:14px; }
 .front-actions .button-row .btn { width:auto; }
@@ -4065,8 +4083,8 @@ fieldset > p {
   .front-actions .button-row .btn { width:100%; }
   .front-hero .front-actions { padding:46px 20px 26px; }
   .footer-contacts { flex-direction:column; gap:24px; }
-  .hero-summary span { font-size:17px; }
-  .hero-summary strong { font-size:21px; }
+  .hero-summary span { font-size:15px; }
+  .hero-summary strong { font-size:18px; }
 }
 .front-hero .front-actions::before, .front-hero .front-actions::after { display:none; }
 .front-actions .hero-summary .capacity-fact { grid-column:auto; }

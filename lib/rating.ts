@@ -1,6 +1,6 @@
 export const ratingPattern = "[0-9]{1,2}\\.[0-9]{1,2}";
 export const ratingHint =
-  "Nhập dạng 3.5 hoặc 3.45; dùng dấu chấm, tối đa 2 chữ số mỗi phía.";
+  "Nhập 3.5 hoặc 3.45, tối đa 2 chữ số mỗi phía; dùng dấu chấm, không dùng dấu phẩy.";
 export const validRating = (value: unknown): value is string =>
   typeof value === "string" &&
   new RegExp("^" + ratingPattern + "$").test(value);

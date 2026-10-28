@@ -1,5 +1,5 @@
 # Use this location inside your existing HTTPS server block.
-# Set APP_ORIGIN to that exact HTTPS origin. Run only the app service (without Caddy).
+# Set APP_ORIGIN to that exact HTTPS origin. Publish 127.0.0.1:3000 from the app service (see docs/DEPLOY_VPS.md).
 location / {
     proxy_pass http://127.0.0.1:3000;
     proxy_http_version 1.1;

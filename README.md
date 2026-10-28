@@ -12,7 +12,7 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-Caddy cấp HTTPS; volume giữ database/ảnh qua các lần cập nhật. Startup tạo database bằng migration, một admin và cấu hình CLB cơ bản; không nạp dữ liệu mẫu và không reset dữ liệu cũ. Chỉ chạy một instance app với volume này. Không cần đẩy file database lên Git. **Không dùng `docker compose down -v` nếu cần giữ dữ liệu.**
+Traefik có sẵn trên VPS cấp HTTPS qua label của container; volume giữ database/ảnh qua các lần cập nhật. Startup tạo database bằng migration, một admin và cấu hình CLB cơ bản; không nạp dữ liệu mẫu và không reset dữ liệu cũ. Chỉ chạy một instance app với volume này. Không cần đẩy file database lên Git. **Không dùng `docker compose down -v` nếu cần giữ dữ liệu.**
 
 Chi tiết DNS, biến môi trường, VPS đã có Nginx, chạy Node trực tiếp, cập nhật và sao lưu: [DEPLOY_VPS.md](docs/DEPLOY_VPS.md).
 
@@ -78,9 +78,9 @@ HL_SKIP_BUILD=1 npm run test:integration
 
 - `db/schema.ts`, `drizzle/`: đầy đủ schema và migration để tự tạo database thật.
 - `DATA_DIR/club.sqlite`, `DATA_DIR/uploads/`: dữ liệu runtime; Docker dùng volume `club_data` tại `/app/data`.
-- `Dockerfile`, `compose.yaml`, `deploy/Caddyfile`: app production, volume bền và HTTPS.
+- `Dockerfile`, `compose.yaml`: app production, volume bền và label Traefik cho HTTPS.
 - `.env.example`: tên miền, origin và tài khoản khởi tạo; file `.env` thật được Git/Docker bỏ qua.
 - `scripts/backup.mjs`: snapshot database và toàn bộ upload. Giữ bản sao ngoài VPS.
-- Chưa build Docker image trên máy phát triển vì không cài Docker; đã chạy và kiểm tra bản standalone production. Không có deploy/hosting tự động.
+- Docker image đã được build và chạy thử. Không có deploy/hosting tự động.
 
 Chi tiết: [DEPLOY_VPS.md](docs/DEPLOY_VPS.md), [hướng dẫn quản trị](docs/HUONG_DAN_THUC_HANH.md), [database](docs/HUONG_DAN_DATABASE.md).

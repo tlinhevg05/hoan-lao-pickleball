@@ -1,3 +1,5 @@
+# Fixed project name keeps volume names (database, uploads) stable even if the folder is renamed.
+name: hoan-lao-pickleball
 services:
   app:
     build: .
@@ -13,8 +15,14 @@ services:
     volumes:
       - club_data:/app/data
       - club_backups:/app/backups
-    ports:
-      - "127.0.0.1:3000:3000"
+    # HTTPS is served by the Traefik instance already running on the VPS (ports 80/443,
+    # Let's Encrypt resolver "letsencrypt"). No host port is published.
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.hoan-lao-pickleball.rule: Host(`${DOMAIN}`)
+      traefik.http.routers.hoan-lao-pickleball.entrypoints: websecure
+      traefik.http.routers.hoan-lao-pickleball.tls.certresolver: letsencrypt
+      traefik.http.services.hoan-lao-pickleball.loadbalancer.server.port: "3000"
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
@@ -26,24 +34,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    environment:
-      DOMAIN: ${DOMAIN:?Set DOMAIN in .env}
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    volumes:
-      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      app:
-        condition: service_healthy
 volumes:
   club_data:
   club_backups:
-  caddy_data:
-  caddy_config:

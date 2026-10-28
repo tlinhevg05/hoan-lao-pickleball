@@ -4,7 +4,7 @@ Repo này chạy **Next.js + Node.js 24**, database **SQLite thật** và ảnh/
 
 ## 1. Cài lần đầu bằng Docker Compose
 
-Chuẩn bị VPS Linux có Docker Engine và Docker Compose plugin. Trỏ bản ghi DNS của tên miền về IP VPS, mở cổng 80/443. Chưa có Docker: dùng hướng dẫn chính thức tại https://docs.docker.com/engine/install/ và https://docs.docker.com/compose/install/.
+Chuẩn bị VPS Linux có Docker Engine, Docker Compose plugin và **Traefik** đang chạy trên cổng 80/443 với entrypoint `websecure` và certresolver `letsencrypt` (mẫu Docker của Hostinger có sẵn). Trỏ bản ghi DNS của tên miền về IP VPS. Chưa có Docker: dùng hướng dẫn chính thức tại https://docs.docker.com/engine/install/ và https://docs.docker.com/compose/install/.
 
 ```sh
 git clone https://github.com/tlinhevg05/hoan-lao-pickleball.git
@@ -27,10 +27,10 @@ ADMIN_PASSWORD=DIEN_MAT_KHAU_RIENG_CUA_BAN
 ```sh
 docker compose up -d --build
 docker compose ps
-docker compose logs --tail=100 app caddy
+docker compose logs --tail=100 app
 ```
 
-Caddy tự xin/gia hạn HTTPS cho tên miền có DNS đúng và cổng 80/443 truy cập được. Mở `https://DOMAIN` và đăng nhập bằng tài khoản vừa đặt. Đây là website dùng chính thức với dữ liệu thật, ban đầu không có VĐV, giải, tin hay album mẫu. Admin nhập thông tin liên hệ, link/tên fanpage, nhóm Zalo, nhà tài trợ và tạo staff qua giao diện.
+Traefik đọc label của container, tự xin/gia hạn HTTPS cho tên miền có DNS đúng và chuyển request vào cổng 3000 của app. App không publish cổng nào ra máy chủ. Mở `https://DOMAIN` và đăng nhập bằng tài khoản vừa đặt. Đây là website dùng chính thức với dữ liệu thật, ban đầu không có VĐV, giải, tin hay album mẫu. Admin nhập thông tin liên hệ, link/tên fanpage, nhóm Zalo, nhà tài trợ và tạo staff qua giao diện.
 
 Lần đầu khởi động sẽ tạo 12 bảng nghiệp vụ, ghi nhận migration, tạo một admin và cấu hình CLB cơ bản. Các lần sau chỉ áp dụng migration mới, **không reset dữ liệu, không ghi đè thông tin đăng nhập hoặc cài đặt đã sửa**. Không có lệnh tự nạp dữ liệu giả khi deploy. Biến `ADMIN_PASSWORD` chỉ có tác dụng tạo admin lần đầu; đổi mật khẩu về sau trong Quản lý tài khoản.
 
@@ -38,8 +38,8 @@ Lần đầu khởi động sẽ tạo 12 bảng nghiệp vụ, ghi nhận migra
 
 - Volume `club_data`: `/app/data/club.sqlite`, các file WAL/SHM, thư mục `uploads/` và metadata ảnh.
 - Volume `club_backups`: bản sao lưu tại `/app/backups`.
-- Hai volume Caddy giữ chứng chỉ HTTPS/cấu hình.
-- Tên volume thực tế thường có tiền tố thư mục dự án. Xem bằng `docker volume ls` và `docker compose config`.
+- Chứng chỉ HTTPS do Traefik quản lý, không nằm trong dự án này.
+- `compose.yaml` cố định tên dự án `hoan-lao-pickleball`, nên tên volume thực tế là `hoan-lao-pickleball_club_data` và `hoan-lao-pickleball_club_backups`, kể cả khi đổi tên thư mục. Xem bằng `docker volume ls` và `docker compose config`.
 
 Ảnh cá nhân không nằm trong `public/`: chỉ chủ hồ sơ hoặc admin/staff được đọc qua API. Tệp nội dung chỉ công khai khi nội dung đã đăng; đề xuất chưa duyệt vẫn riêng tư. Giữ nguyên đường dẫn volume khi chuyển server hoặc cập nhật code.
 
@@ -77,15 +77,16 @@ Lưu bản sao ở nơi khác VPS. Archive chứa database có hash mật khẩu
 
 Khi khôi phục: dừng app, giữ bản sao hiện trạng, giải nén archive vào thư mục/volume **trống**, đặt chủ sở hữu phù hợp user `node` (UID 1000 trong image), rồi gắn volume đó làm `/app/data` và khởi động lại. Khôi phục cả `club.sqlite` lẫn `uploads/`; không chỉ chép file SQLite mới đè lên một database còn đang mở hoặc để lại WAL của bản cũ. Nếu đổi tên miền, sửa `DOMAIN`/`APP_ORIGIN` trước khi mở lại.
 
-## 5. Nếu VPS đã có Nginx/Caddy
+## 5. Nếu VPS dùng Nginx thay vì Traefik
 
-Để tránh trùng cổng 80/443, chỉ chạy app:
+Bỏ phần `labels` trong `compose.yaml` và thêm vào service `app`:
 
-```sh
-docker compose up -d --build app
+```yaml
+    ports:
+      - "127.0.0.1:3000:3000"
 ```
 
-App chỉ publish cổng `127.0.0.1:3000`. Reverse proxy HTTPS hiện tại chuyển vào cổng đó; tham khảo `deploy/nginx.conf.example`. Cần giữ Host/X-Forwarded-Proto và ghi đè X-Real-IP. Tên miền thực phải khớp `DOMAIN` và `APP_ORIGIN`; nếu không, API ghi dữ liệu sẽ từ chối vì khác origin. Không mở trực tiếp cổng 3000 ra Internet khi dùng chế độ tin cậy proxy.
+Reverse proxy HTTPS hiện tại chuyển vào cổng đó; tham khảo `deploy/nginx.conf.example`. Cần giữ Host/X-Forwarded-Proto và ghi đè X-Real-IP. Tên miền thực phải khớp `DOMAIN` và `APP_ORIGIN`; nếu không, API ghi dữ liệu sẽ từ chối vì khác origin. Không mở trực tiếp cổng 3000 ra Internet khi dùng chế độ tin cậy proxy.
 
 ## 6. Chạy Node trực tiếp
 
@@ -110,4 +111,4 @@ HL_SKIP_BUILD=1 npm run test:integration
 
 Bộ kiểm thử dùng server production, database và ảnh trong `work/integration-state-vps`; không chạm vào dữ liệu chính thức. Kiểm tra `/api/health` trả `{"ok":true}`; thử đăng nhập admin, thêm ảnh, tạo giải và kiểm tra link Zalo/fanpage trên điện thoại trước khi mời VĐV dùng. Kiểm tra quyền đọc ảnh riêng tư và xuất Excel được bao phủ bởi bộ test.
 
-Bản VPS đã kiểm tra build/TypeScript, storage và 162 luồng API trên bản standalone tại máy phát triển. Chưa build image Docker tại máy này vì không cài Docker, và chưa kiểm tra trên VPS/điện thoại thật của bạn. Repo không tự tạo hosting, không tự kết nối Cloudflare và không tự deploy khi push Git.
+Bản VPS đã kiểm tra build/TypeScript, storage và 162 luồng API trên bản standalone tại máy phát triển. Image Docker đã được build và chạy thử: health check, đăng nhập admin, chặn sai origin, upload/đọc ảnh, khởi động lại không ghi đè mật khẩu admin và từ chối `APP_ORIGIN` không hợp lệ. Repo không tự tạo hosting, không tự kết nối Cloudflare và không tự deploy khi push Git.

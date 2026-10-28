@@ -15,6 +15,7 @@ import {
   sessionResponse,
   siteData,
   publicRegistration,
+  clientAddress,
 } from "@/lib/server";
 export async function GET(request: Request) {
   return handle(async () => {
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
     await rateLimit("login:" + (await digest(key)), 12);
     await rateLimit(
       "login-total:" +
-        clean(request.headers.get("cf-connecting-ip") || "local"),
+        clientAddress(request),
       100,
       15,
     );

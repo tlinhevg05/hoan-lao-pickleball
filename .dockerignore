@@ -1,0 +1,16 @@
+node_modules
+.next
+.vinext
+.wrangler
+.sites-runtime
+.git
+.env
+.env.*
+.dev.vars*
+data
+backups
+work
+dist
+outputs
+*.tsbuildinfo
+.DS_Store

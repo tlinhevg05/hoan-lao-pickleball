@@ -91,7 +91,7 @@ export async function POST(request: Request) {
         now,
         account.id,
       );
-    // D1 batch is transactional: duplicate phone or duplicate entry rolls back both new profile and entry.
+    // SQLite batch is transactional: duplicate phone or duplicate entry rolls back both new profile and entry.
     try {
       const results = await db().batch([
         ...(newcomer?.statements || []),

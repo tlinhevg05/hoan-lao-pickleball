@@ -2,7 +2,7 @@
 
 Môi trường local hiện đã được dọn trống theo yêu cầu: không còn hồ sơ VĐV, đăng ký giải, staff, giải đấu, bài viết, album, lời nhắn hoặc file upload thử. Giữ tài khoản admin hiện có và cấu hình CLB cơ bản.
 
-Mở http://localhost:5173. Đăng nhập `admin` / `HoanLao@2026!` (hoặc mật khẩu admin bạn đã đổi trước đó).
+Đăng nhập bằng tài khoản admin đã đặt trong `.env` khi cài lần đầu hoặc thông tin đã đổi trong Quản lý tài khoản. Cài đặt VPS chính thức theo `DEPLOY_VPS.md`; không có mật khẩu production mặc định.
 
 ## Chuẩn bị nội dung
 
@@ -45,14 +45,8 @@ Trong Thông tin CLB, nhập link fanpage Facebook và tên hiển thị riêng.
 
 Khi kéo chuột từ ô nhập ra ngoài modal, form không đóng và vẫn giữ thông tin. Bấm riêng vào nền bên ngoài hoặc nút Đóng/Hủy mới đóng.
 
-## Khởi chạy và sao lưu
+## Cài đặt và sao lưu
 
-```sh
-npm install
-npm run setup:local
-npm run dev
-```
+Xem `DEPLOY_VPS.md` để triển khai chính thức bằng Docker Compose hoặc Node.js 24. Database SQLite và thư mục upload nằm trong volume/thư mục dữ liệu riêng; cập nhật code không reset dữ liệu. Dùng lệnh backup trong tài liệu và lưu bản sao ngoài VPS. Không xóa volume, không dùng `docker compose down -v` nếu cần giữ dữ liệu.
 
-`setup:local` không xóa dữ liệu đang có và bản cài mới trống nội dung. `npm run reset:empty` chủ động xóa dữ liệu ứng dụng local, giữ admin. Sao lưu D1/R2 trước khi reset nếu cần giữ lại. Source ZIP không chứa database hoặc mật khẩu runtime.
-
-160 kiểm tra API đã đạt trên database tạm riêng; không chạy kịch bản cắt top 20 trên database người dùng đang thao tác.
+162 kiểm tra API chạy trên server production và database/ảnh tạm riêng; dữ liệu kiểm thử không đưa vào bản chính thức.

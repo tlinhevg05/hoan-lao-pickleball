@@ -1,0 +1,13 @@
+# Use this location inside your existing HTTPS server block.
+# Set APP_ORIGIN to that exact HTTPS origin. Run only the app service (without Caddy).
+location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+    client_max_body_size 32m;
+    proxy_read_timeout 60s;
+    proxy_buffering off;
+}

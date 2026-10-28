@@ -1,0 +1,12 @@
+import { loadEnvFile } from 'node:process';
+import { existsSync } from 'node:fs';
+import { spawn, spawnSync } from 'node:child_process';
+import path from 'node:path';
+if(existsSync('.env')) loadEnvFile('.env');
+const env={...process.env,NODE_ENV:'production',DATA_DIR:path.resolve(process.env.DATA_DIR || 'data'),HOSTNAME:process.env.SERVER_HOST || '127.0.0.1',PORT:process.env.PORT || '3000'};
+const initialized=spawnSync(process.execPath,['scripts/setup-vps.mjs'],{env,stdio:'inherit'});
+if(initialized.status!==0) process.exit(initialized.status || 1);
+if(!existsSync('.next/standalone/server.js')) throw new Error('Run npm run build first.');
+const server=spawn(process.execPath,['.next/standalone/server.js'],{env,stdio:'inherit'});
+process.on('SIGINT',()=>server.kill('SIGINT'));process.on('SIGTERM',()=>server.kill('SIGTERM'));
+server.on('exit',code=>process.exit(code ?? 1));

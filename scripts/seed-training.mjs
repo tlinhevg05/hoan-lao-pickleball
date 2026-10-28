@@ -157,7 +157,8 @@ for (let i = 1; i <= people.length; i++) {
     `INSERT INTO athletes(id,data,status,note,points,created_at,updated_at) VALUES(${q(athlete(i))},${js(data)},${q(status)},${q(status === "rejected" ? "Hồ sơ mẫu cần BTC xem lại điều kiện tham gia." : status === "pending" ? "Hồ sơ mới, chờ xác minh thông tin." : "")},${Number(rating.replace(",", ".")) || 0},${q(profileCreated)},${q(now)});`,
   );
 }
-const vars = readFileSync(".dev.vars", "utf8");
+if (process.env.HL_TEST_FIXTURES !== "1") throw new Error("Fictional fixtures are restricted to the isolated test runner.");
+const vars = `ADMIN_PASSWORD="${process.env.HL_TEST_ADMIN_PASSWORD}"\nSTAFF_PASSWORD="${process.env.HL_TEST_STAFF_PASSWORD}"`;
 const staffPassword =
   vars.match(/STAFF_PASSWORD="([^"]+)"/)?.[1] || "Staff@2026!";
 sql.push(

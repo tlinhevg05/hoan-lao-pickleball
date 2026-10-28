@@ -49,3 +49,10 @@ yarn-error.log*
 work-seed.sql
 *.tsbuildinfo
 !.dev.vars.example
+
+# VPS persistence and secrets
+/data/
+/backups/
+*.sqlite
+*.sqlite-*
+!.env.example

@@ -1,3 +1,0 @@
-# Used only to seed local admin/staff accounts. Existing account passwords are not overwritten by normal setup.
-ADMIN_PASSWORD="HoanLao@2026!"
-STAFF_PASSWORD="Staff@2026!"

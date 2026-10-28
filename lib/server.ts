@@ -1,4 +1,4 @@
-import { env } from "cloudflare:workers";
+import { getDatabase, getBucket, FileRangeError } from "./storage.mjs";
 import type {
   Account,
   Athlete,
@@ -29,12 +29,10 @@ export const fail = (message: string, status = 400): never => {
   throw new HttpError(status, message);
 };
 export function db() {
-  if (!env.DB) throw new Error("Database unavailable");
-  return env.DB;
+  return getDatabase();
 }
 export function bucket() {
-  if (!env.BUCKET) throw new Error("Storage unavailable");
-  return env.BUCKET;
+  return getBucket();
 }
 export const json = (value: unknown, status = 200) =>
   Response.json(value, { status, headers: { "Cache-Control": "no-store" } });
@@ -42,6 +40,8 @@ export async function handle(fn: () => Promise<Response>) {
   try {
     return await fn();
   } catch (e) {
+    if (e instanceof FileRangeError)
+      return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${e.size}` } });
     if (e instanceof HttpError) return json({ error: e.message }, e.status);
     if (e instanceof SyntaxError)
       return json({ error: "Dữ liệu gửi lên không hợp lệ." }, 400);
@@ -82,8 +82,14 @@ export function validDate(v: unknown) {
   );
 }
 export function assertOrigin(request: Request) {
-  if (request.headers.get("origin") !== new URL(request.url).origin)
+  const expected = process.env.APP_ORIGIN || new URL(request.url).origin;
+  if (request.headers.get("origin") !== expected)
     fail("Yêu cầu không hợp lệ.", 403);
+}
+export function clientAddress(request: Request) {
+  return process.env.TRUST_PROXY === "1"
+    ? clean(request.headers.get("x-real-ip") || "proxy", 100)
+    : "local";
 }
 export async function digest(v: string) {
   return [
@@ -200,7 +206,7 @@ export async function sessionResponse(
     {
       headers: {
         "Cache-Control": "no-store",
-        "Set-Cookie": `hl_session=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=604800${new URL(request.url).protocol === "https:" ? "; Secure" : ""}`,
+        "Set-Cookie": `hl_session=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=604800${process.env.NODE_ENV === "production" || new URL(request.url).protocol === "https:" ? "; Secure" : ""}`,
       },
     },
   );

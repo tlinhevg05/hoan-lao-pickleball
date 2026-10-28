@@ -144,7 +144,8 @@ const rows = [
     },
   ]),
 ];
-const vars = readFileSync(".dev.vars", "utf8");
+if (process.env.HL_TEST_FIXTURES !== "1") throw new Error("Fictional fixtures are restricted to the isolated test runner.");
+const vars = `ADMIN_PASSWORD="${process.env.HL_TEST_ADMIN_PASSWORD}"\nSTAFF_PASSWORD="${process.env.HL_TEST_STAFF_PASSWORD}"`;
 async function hash(password) {
   const salt = crypto.randomUUID();
   const key = await crypto.subtle.importKey(

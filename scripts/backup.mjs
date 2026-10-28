@@ -1,0 +1,20 @@
+import { DatabaseSync, backup } from 'node:sqlite';
+import { loadEnvFile } from 'node:process';
+import { existsSync } from 'node:fs';
+import { mkdir, cp, chmod } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
+import path from 'node:path';
+import { databasePath, dataDirectory } from '../lib/storage.mjs';
+if (existsSync('.env')) loadEnvFile('.env');
+const stamp = new Date().toISOString().replace(/[:.]/g,'-');
+const output=path.resolve(process.env.BACKUP_DIR || 'backups',stamp);
+await mkdir(output,{recursive:true,mode:0o700});
+const db=new DatabaseSync(databasePath(),{readOnly:true});
+try { await backup(db,path.join(output,'club.sqlite')); } finally {db.close();}
+await chmod(path.join(output,'club.sqlite'),0o600);
+if(existsSync(path.join(dataDirectory(),'uploads'))) await cp(path.join(dataDirectory(),'uploads'),path.join(output,'uploads'),{recursive:true});
+const file=output+'.tar.gz';
+const result=spawnSync('tar',['-czf',file,'-C',output,'.'],{stdio:'inherit'});
+if(result.status!==0) throw new Error('Could not create backup archive');
+await chmod(file,0o600);
+console.log('Backup created: '+file+' (SQLite snapshot and private upload files)');

@@ -13,7 +13,7 @@ if (!base || !state || !state.startsWith("work/integration-state"))
   throw new Error(
     "Run npm run test:integration to use the disposable database.",
   );
-const vars = readFileSync(".dev.vars", "utf8"),
+const vars = `ADMIN_PASSWORD="${process.env.HL_TEST_ADMIN_PASSWORD}"\nSTAFF_PASSWORD="${process.env.HL_TEST_STAFF_PASSWORD}"`,
   adminPassword = vars.match(/ADMIN_PASSWORD="([^"]+)"/)[1],
   staffPassword = vars.match(/STAFF_PASSWORD="([^"]+)"/)?.[1] || "Staff@2026!",
   password = "QA-Athlete-2026!";
@@ -53,6 +53,7 @@ async function login(
 ) {
   const r = await req("/api/auth", { identifier, password: p });
   assert.equal(r.response.status, 200, JSON.stringify(r.data));
+  assert.match(r.response.headers.get("set-cookie"), /; Secure(?:;|$)/, "Production sessions require Secure cookies");
   return r.cookie;
 }
 const profile = (n) => ({
@@ -822,6 +823,14 @@ check(
     .status === 206,
   "Published uploads support byte ranges",
 );
+check(
+  (await fetch(base + asset.url, { headers: { Range: "bytes=999999999-" } })).status === 416,
+  "VPS storage rejects unsatisfiable byte ranges with HTTP 416",
+);
+check(
+  (await fetch(base + asset.url, { headers: { Range: "bytes=0-99", "If-Range": "stale-etag" } })).status === 200,
+  "Stale If-Range returns the complete file",
+);
 r = await post(
   {
     action: "save",
@@ -1052,20 +1061,8 @@ check(
 const command = spawnSync(
   process.execPath,
   [
-    "--import",
-    "./scripts/sites-env.mjs",
-    "./node_modules/wrangler/bin/wrangler.js",
-    "d1",
-    "execute",
-    "DB",
-    "--local",
-    "--config",
-    "dist/server/wrangler.json",
-    "--persist-to",
-    state,
-    "--command",
+    "tests/sql.mjs",
     "SELECT kind,COUNT(*) AS total FROM content WHERE kind IN ('article','album') GROUP BY kind",
-    "--json",
   ],
   { encoding: "utf8" },
 );
@@ -1203,20 +1200,8 @@ check(
 const legacyWrite = spawnSync(
   process.execPath,
   [
-    "--import",
-    "./scripts/sites-env.mjs",
-    "./node_modules/wrangler/bin/wrangler.js",
-    "d1",
-    "execute",
-    "DB",
-    "--local",
-    "--config",
-    "dist/server/wrangler.json",
-    "--persist-to",
-    state,
-    "--command",
+    "tests/sql.mjs",
     "UPDATE content SET data=json_set(data,'$.status','soon') WHERE id='qa-auto-past'",
-    "--json",
   ],
   { encoding: "utf8" },
 );
@@ -1392,27 +1377,15 @@ check(
 const logCount = spawnSync(
   process.execPath,
   [
-    "--import",
-    "./scripts/sites-env.mjs",
-    "./node_modules/wrangler/bin/wrangler.js",
-    "d1",
-    "execute",
-    "DB",
-    "--local",
-    "--config",
-    "dist/server/wrangler.json",
-    "--persist-to",
-    state,
-    "--command",
+    "tests/sql.mjs",
     "SELECT COUNT(*) AS total FROM submissions WHERE status='approved'",
-    "--json",
   ],
   { encoding: "utf8" },
 );
 assert.equal(logCount.status, 0, logCount.stderr);
 check(
   JSON.parse(logCount.stdout)[0].results[0].total === 30,
-  "Approval history is physically capped in D1",
+  "Approval history is physically capped in SQLite",
 );
 r = await post(
   {

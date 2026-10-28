@@ -18,6 +18,8 @@ Chi tiết DNS, biến môi trường, VPS đã có Nginx, chạy Node trực ti
 
 ## Phát triển local
 
+Khi làm việc cùng collaborators, xem [quy trình Git](CONTRIBUTING.md) để cập nhật code trước khi sửa và giữ cấu hình riêng ngoài các file dùng chung.
+
 Dùng Node.js 24 trở lên. Copy `.env.example` thành `.env`, đặt mật khẩu admin riêng từ 12 ký tự và `APP_ORIGIN=http://localhost:5173`:
 
 ```sh

@@ -6,6 +6,8 @@ node_modules
 .git
 .env
 .env.*
+compose.override.yaml
+compose.override.yml
 .dev.vars*
 data
 backups

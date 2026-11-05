@@ -42,7 +42,7 @@ try {
   console.log('Isolated production QA server: '+base);
   writeFileSync('work/integration-url.txt',base);
   run(['tests/integration.mjs'],{...env,HL_TEST_URL:base});
-  console.log('162 API checks passed against the VPS runtime.');
+  console.log('164 API checks passed against the VPS runtime.');
   const before=await (await fetch(base+'/api/site')).json();
   await new Promise(resolve=>{server.once('exit',resolve);stop();});
   server=spawn(process.execPath,['.next/standalone/server.js'],{env,stdio:['ignore',log,log]});

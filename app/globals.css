@@ -3286,52 +3286,18 @@ fieldset > p {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
-/* Club masthead and featured tournament share a quiet, readable dark treatment. */
+/* Club banner artwork and featured tournament. */
 .club-banner {
   margin: 28px 32px 0;
-  height: 156px;
   overflow: hidden;
-  position: relative;
   border-radius: 8px;
-  background: var(--ink);
 }
 .club-banner > img {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 58%;
-}
-.club-banner:after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(14, 40, 43, 0.9),
-    rgba(14, 40, 43, 0.25)
-  );
-}
-.club-banner > div {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  padding: 24px 32px;
-  color: white;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 5px;
-}
-.club-banner span {
-  font-size: 16px;
-  letter-spacing: 0.14em;
-  color: var(--lime);
-  font-weight: 700;
-}
-.club-banner strong {
-  font-family: var(--display);
-  font-size: clamp(26px, 3vw, 39px);
-  line-height: 1.2;
+  height: auto;
+  aspect-ratio: 15 / 2;
+  object-fit: contain;
 }
 .front-hero {
   position: relative;
@@ -3449,8 +3415,9 @@ fieldset > p {
 .settings-banner-preview {
   width: 100%;
   max-width: 600px;
-  height: 120px;
-  object-fit: cover;
+  height: auto;
+  aspect-ratio: 15 / 2;
+  object-fit: contain;
   border-radius: 6px;
 }
 .event-review-layout .admin-panel table td:first-child {
@@ -3483,17 +3450,6 @@ fieldset > p {
 @media (max-width: 680px) {
   .club-banner {
     margin: 18px 18px 0;
-    height: 114px;
-  }
-  .club-banner > div {
-    padding: 18px;
-  }
-  .club-banner span {
-    font-size: 13px;
-    letter-spacing: 0.08em;
-  }
-  .club-banner strong {
-    font-size: 27px;
   }
   .front-hero {
     display: flex;
@@ -4126,7 +4082,9 @@ fieldset > p {
 
 /* Header identity, compact contact footer and sidebar sponsorship. */
 .public-topbar .topbar-brand { min-width:0; }
-.topbar-brand .logo > img { width:46px; height:46px; }
+.public-topbar { height:96px; }
+.sidebar-brand .logo > img, .topbar-brand .logo > img { width:54px; height:70px; }
+.club-footer .logo > img { width:44px; height:58px; }
 .topbar-brand .logo > span { font-size:32px; }
 .topbar-brand .logo small { font-size:10px; letter-spacing:2px; }
 .topbar-auth-short { display:none; }
@@ -4166,7 +4124,7 @@ fieldset > p {
 @keyframes sponsor-scroll { to { transform:translateX(-50%); } }
 @media(min-width:901px) and (max-width:1200px) {
   .simple-footer.club-footer { gap:16px; padding-inline:22px; }
-  .club-footer .logo > img { width:36px; height:36px; }
+  .club-footer .logo > img { width:40px; height:52px; }
   .club-footer .logo > span { font-size:25px; }
   .club-footer .logo small { font-size:8px; letter-spacing:1.2px; }
   .club-footer p, .footer-contact-line p { font-size:16px; }
@@ -4176,10 +4134,10 @@ fieldset > p {
   .club-footer > .logo { grid-column:1/-1; }
 }
 @media(max-width:680px) {
-  .public-topbar { padding-inline:12px; gap:8px; }
+  .public-topbar { height:75px; padding-inline:12px; gap:8px; }
   .public-topbar > .icon-btn { flex:none; width:34px; padding:4px; }
   .topbar-brand .logo { gap:8px; }
-  .topbar-brand .logo > img { width:34px; height:34px; }
+  .topbar-brand .logo > img { width:36px; height:47px; }
   .topbar-brand .logo > span { font-size:27px; }
   .topbar-brand .logo small { font-size:8px; letter-spacing:1.2px; margin-top:4px; }
   .topbar-auth-label { display:none; }

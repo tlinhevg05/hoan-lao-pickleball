@@ -15,7 +15,7 @@ export function ClubFooter({ settings }: { settings: Settings }) {
     (settings.facebookUrl ? settings.clubName : "Sẽ cập nhật");
   return (
     <footer className="simple-footer club-footer">
-      <Logo name={settings.clubName} image={settings.logoImage} />
+      <Logo name={settings.clubName} image={settings.logoLightImage} />
       <div className="footer-fanpage">
         <FacebookMark />
         <p>

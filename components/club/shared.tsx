@@ -2,6 +2,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { X, ArrowUpRight } from "lucide-react";
 import { deadlinePassed } from "@/lib/events";
+import { logoOnLight, logoOnDark } from "@/lib/branding";
 export { eventStatus, deadlinePassed } from "@/lib/events";
 import type { Tournament, Settings } from "@/lib/types";
 export const dateLabel = (date: string) =>
@@ -38,7 +39,7 @@ export async function api<T = any>(
 export function Logo({
   light = false,
   name = "Hoàn Lão Pickleball",
-  image = "/favicon.svg",
+  image,
 }: {
   light?: boolean;
   name?: string;
@@ -50,7 +51,7 @@ export function Logo({
       href="/"
       aria-label={name + " — Trang chủ"}
     >
-      <img src={image} alt="" />
+      <img src={image || (light ? logoOnDark : logoOnLight)} alt="" />
       <span>
         {name.replace(/\s*pickleball$/i, "").toLocaleUpperCase("vi")}
         <small>PICKLEBALL CLUB</small>

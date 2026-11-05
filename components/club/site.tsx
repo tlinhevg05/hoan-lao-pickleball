@@ -50,6 +50,8 @@ import { numericRating } from "@/lib/rating";
 import { RichText } from "./rich-text";
 import { ContactForm } from "./contact-form";
 import { ClubFooter, SidebarSponsors, FloatingZalo } from "./footer-links";
+import Image from "next/image";
+import { clubBannerSource } from "@/lib/branding";
 type View =
   | "home"
   | "tournaments"
@@ -181,7 +183,7 @@ export default function Site({
       )}
       <aside className={"public-sidebar " + (menu ? "open" : "")}>
         <div className="sidebar-brand">
-          <Logo light name={s.clubName} image={s.logoImage} />
+          <Logo light name={s.clubName} image={s.logoDarkImage} />
           <button
             className="mobile-only icon-btn"
             onClick={() => setMenu(false)}
@@ -243,7 +245,7 @@ export default function Site({
             <Menu size={27} />
           </button>
           <div className="topbar-brand">
-            <Logo name={s.clubName} image={s.logoImage} />
+            <Logo name={s.clubName} image={s.logoLightImage} />
           </div>
           <a
             className="btn small"
@@ -267,14 +269,15 @@ export default function Site({
           {view === "home" && (
             <>
               <section className="club-banner" aria-label="Hoàn Lão Pickleball">
-                <img
-                  src={s.clubBannerImage || "/pickleball-court.jpg"}
-                  alt="Sân pickleball — ảnh tham khảo cho banner CLB"
+                <Image
+                  src={clubBannerSource(s.clubBannerImage)}
+                  alt="Hoàn Lão Pickleball — Cùng ra sân. Cùng kết nối."
+                  width={7500}
+                  height={1000}
+                  sizes="(max-width: 680px) calc(100vw - 36px), (max-width: 900px) calc(100vw - 64px), calc(100vw - 360px)"
+                  unoptimized={!clubBannerSource(s.clubBannerImage).startsWith("/")}
+                  preload
                 />
-                <div>
-                  <span>HOÀN LÃO PICKLEBALL</span>
-                  <strong>Cùng ra sân. Cùng kết nối.</strong>
-                </div>
               </section>
               {feature && (
                 <section className="front-page">

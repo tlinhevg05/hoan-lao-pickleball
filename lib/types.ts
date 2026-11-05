@@ -82,6 +82,8 @@ export type Settings = {
   id: string;
   clubName: string;
   logoImage: string;
+  logoLightImage?: string;
+  logoDarkImage?: string;
   contacts: { name: string; phone: string }[];
   contact: string;
   phone: string;

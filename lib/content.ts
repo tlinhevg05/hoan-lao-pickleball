@@ -1,4 +1,5 @@
 import { articleSections, articleBody } from "./articles";
+import { logoOnLight, logoOnDark, clubBannerSource } from "./branding";
 import { feeAmountOf, formatFee, isDoubles, eventStatus } from "./events";
 import { clean, db, fail, safeUrl, validDate } from "./server";
 export async function validateContent(
@@ -241,6 +242,8 @@ export async function validateContent(
     return {
       clubName: clean(d.clubName, 100),
       logoImage: safeUrl(d.logoImage) || "/favicon.svg",
+      logoLightImage: safeUrl(d.logoLightImage) || logoOnLight,
+      logoDarkImage: safeUrl(d.logoDarkImage) || logoOnDark,
       contacts,
       contact: contacts[0].name,
       phone: contacts[0].phone,
@@ -249,7 +252,7 @@ export async function validateContent(
       facebookUrl: facebook,
       facebookName: clean(d.facebookName, 120),
       sponsors,
-      clubBannerImage: safeUrl(d.clubBannerImage) || "/pickleball-court.jpg",
+      clubBannerImage: clubBannerSource(safeUrl(d.clubBannerImage)),
       demo: false,
     };
   }

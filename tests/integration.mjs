@@ -935,6 +935,8 @@ r = await post(
       zaloUrl: "https://zalo.me/g/qa",
       facebookUrl: "https://www.facebook.com/qa",
       facebookName: "Fanpage CLB QA",
+      logoLightImage: "/branding/logo-on-light.svg",
+      logoDarkImage: "/branding/logo-on-dark.svg",
       clubBannerImage: "/pickleball-ball.jpg",
       sponsors: [
         { name: "Nhà tài trợ A", url: "https://example.com/a" },
@@ -949,6 +951,16 @@ check(
   "Admin retains exclusive club and social settings permissions",
 );
 const sponsorSettings = (await site()).settings;
+check(sponsorSettings.logoLightImage === "/branding/logo-on-light.svg" &&
+  sponsorSettings.logoDarkImage === "/branding/logo-on-dark.svg",
+  "Light and dark logo settings persist independently");
+const bannerResponse = await fetch(base + "/_next/image?url=%2Fbranding%2Fclub-banner.png&w=1080&q=75", {
+  headers: { Accept: "image/webp" },
+});
+const bannerBytes = Buffer.from(await bannerResponse.arrayBuffer());
+check(bannerResponse.ok && bannerResponse.headers.get("content-type") === "image/webp" &&
+  bannerBytes.toString("ascii", 8, 12) === "WEBP" && bannerBytes.length < 1_000_000,
+  "Original club banner is delivered as an optimized responsive image");
 check(sponsorSettings.facebookName === "Fanpage CLB QA" &&
   sponsorSettings.facebookUrl === "https://www.facebook.com/qa",
   "Facebook display name persists independently from the fanpage link");

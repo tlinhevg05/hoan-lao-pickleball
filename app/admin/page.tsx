@@ -258,7 +258,7 @@ export default function Admin() {
       )}
       <aside className={"admin-sidebar " + (menu ? "open" : "")}>
         <div className="sidebar-brand">
-          <Logo light />
+          <Logo light name={data?.settings.clubName} image={data?.settings.logoDarkImage} />
           <button
             className="mobile-only icon-btn"
             aria-label="Đóng menu"
@@ -720,7 +720,7 @@ export default function Admin() {
                 <div className="settings-panel admin-panel">
                   <Logo
                     name={data.settings.clubName}
-                    image={data.settings.logoImage}
+                    image={data.settings.logoLightImage}
                   />
                   <dl className="settings-details">
                     <div>

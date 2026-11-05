@@ -6,6 +6,7 @@ import { feeAmountOf, formatFee, eventStatus } from "@/lib/events";
 import { api, Modal } from "./shared";
 import { articleSections } from "@/lib/articles";
 import { RichTextEditor } from "./rich-text";
+import { logoOnLight, logoOnDark, clubBannerSource } from "@/lib/branding";
 export type ContentDraft = {
   kind: string;
   data: Record<string, any>;
@@ -77,6 +78,11 @@ export function ContentEditor({
       ...draft.data,
       sponsors: draft.data.sponsors || [],
       facebookName: draft.data.facebookName || "",
+      ...(kind === "settings" ? {
+        logoLightImage: draft.data.logoLightImage || logoOnLight,
+        logoDarkImage: draft.data.logoDarkImage || logoOnDark,
+        clubBannerImage: clubBannerSource(draft.data.clubBannerImage),
+      } : {}),
       sections:
         kind === "article"
           ? articleSections(draft.data.body, draft.data.sections)
@@ -799,8 +805,10 @@ export function ContentEditor({
                 alt="Banner CLB"
               />
             )}
-            {field("logoImage", "Logo (URL)", "text", false)}
-            {uploader("logoImage", "Chọn logo từ máy tính")}
+            {field("logoLightImage", "Logo cho nền sáng (URL)", "text", false)}
+            {uploader("logoLightImage", "Chọn logo cho nền sáng")}
+            {field("logoDarkImage", "Logo cho nền tối (URL)", "text", false)}
+            {uploader("logoDarkImage", "Chọn logo cho nền tối")}
           </>
         )}
       </form>

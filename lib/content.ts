@@ -241,7 +241,7 @@ export async function validateContent(
     }
     return {
       clubName: clean(d.clubName, 100),
-      logoImage: safeUrl(d.logoImage) || "/favicon.svg",
+      logoImage: safeUrl(d.logoImage) || logoOnLight,
       logoLightImage: safeUrl(d.logoLightImage) || logoOnLight,
       logoDarkImage: safeUrl(d.logoDarkImage) || logoOnDark,
       contacts,

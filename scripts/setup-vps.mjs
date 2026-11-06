@@ -23,7 +23,7 @@ try {
     db.connection.prepare("INSERT INTO accounts(id,username,password_hash,role,disabled,created_at) VALUES(?,?,?,'admin',0,?)").run(randomUUID(), username, hash, new Date().toISOString());
     console.log('Initial admin account created. Existing credentials are never overwritten on restart.');
   }
-  const settings = { clubName:'Hoàn Lão Pickleball', logoImage:'/favicon.svg', contact:'Vũ Trịnh Thanh', phone:'', contacts:[{name:'Vũ Trịnh Thanh',phone:''},{name:'',phone:''}], address:'Xã Hoàn Lão, tỉnh Quảng Trị', zaloUrl:'', facebookUrl:'', facebookName:'', sponsors:[], clubBannerImage:'/pickleball-court.jpg', demo:false };
+  const settings = { clubName:'Hoàn Lão Pickleball', logoImage:'/branding/logo-on-light.png', contact:'Vũ Trịnh Thanh', phone:'', contacts:[{name:'Vũ Trịnh Thanh',phone:''},{name:'',phone:''}], address:'Xã Hoàn Lão, tỉnh Quảng Trị', zaloUrl:'', facebookUrl:'', facebookName:'', sponsors:[], clubBannerImage:'/pickleball-court.jpg', demo:false };
   db.connection.prepare("INSERT OR IGNORE INTO content(id,kind,data,created_at) VALUES('settings','settings',?,?)").run(JSON.stringify(settings), new Date().toISOString());
   console.log('Database migrations applied; club data preserved.');
 } finally { db.close(); }

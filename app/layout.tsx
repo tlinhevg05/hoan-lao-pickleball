@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { logoOnLight } from "@/lib/branding";
 import "./globals.css";
 export const metadata: Metadata = {
   title: "Hoàn Lão Pickleball — Hẹn nhau trên sân",
   description:
     "Câu lạc bộ Pickleball xã Hoàn Lão. Cập nhật giải đấu, đăng ký thi đấu và những khoảnh khắc trên sân.",
-  icons: { icon: "/favicon.svg" },
+  icons: { icon: logoOnLight },
 };
 export default function RootLayout({
   children,

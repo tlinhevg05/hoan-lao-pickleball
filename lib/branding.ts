@@ -1,4 +1,4 @@
-export const logoOnLight = "/branding/logo-on-light.svg";
+export const logoOnLight = "/branding/logo-on-light.png";
 export const logoOnDark = "/branding/logo-on-dark.svg";
 export const clubBanner = "/branding/club-banner.png";
 

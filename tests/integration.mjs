@@ -935,7 +935,7 @@ r = await post(
       zaloUrl: "https://zalo.me/g/qa",
       facebookUrl: "https://www.facebook.com/qa",
       facebookName: "Fanpage CLB QA",
-      logoLightImage: "/branding/logo-on-light.svg",
+      logoLightImage: "/branding/logo-on-light.png",
       logoDarkImage: "/branding/logo-on-dark.svg",
       clubBannerImage: "/pickleball-ball.jpg",
       sponsors: [
@@ -951,7 +951,7 @@ check(
   "Admin retains exclusive club and social settings permissions",
 );
 const sponsorSettings = (await site()).settings;
-check(sponsorSettings.logoLightImage === "/branding/logo-on-light.svg" &&
+check(sponsorSettings.logoLightImage === "/branding/logo-on-light.png" &&
   sponsorSettings.logoDarkImage === "/branding/logo-on-dark.svg",
   "Light and dark logo settings persist independently");
 const bannerResponse = await fetch(base + "/_next/image?url=%2Fbranding%2Fclub-banner.png&w=1080&q=75", {
